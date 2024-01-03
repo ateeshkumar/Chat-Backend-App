@@ -1,6 +1,6 @@
 import { generateToken } from "../config/generateToken.js";
 import { comparePassword, hashPassword } from "../helper/hashPassword.js";
-import { user } from "../models/userModel.js";
+import { User } from "../models/userModel.js";
 export const loginController = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -10,7 +10,7 @@ export const loginController = async (req, res) => {
         message: "all fields are required",
       });
     }
-    const luser = await user.findOne({ email });
+    const luser = await User.findOne({ email });
     if (!luser) {
       res.status(301).send({
         success: false,
@@ -48,7 +48,7 @@ export const registerController = async (req, res) => {
         message: "Fields are required",
       });
     }
-    const existuser = await user.findOne({ email });
+    const existuser = await User.findOne({ email });
     if (existuser) {
       res.status(300).send({
         success: false,
@@ -56,7 +56,7 @@ export const registerController = async (req, res) => {
       });
     }
     const bcrpassword = await hashPassword(password);
-    const newUser = await new user({
+    const newUser = await new User({
       name,
       email,
       password: bcrpassword,
@@ -87,7 +87,7 @@ export const registerController = async (req, res) => {
 
 export const getAllUserController = async (req, res) => {
   try {
-    const alluser = await user.find({});
+    const alluser = await User.find({});
     if (!alluser) {
       return res.status(404).send({
         success: false,
@@ -118,7 +118,7 @@ export const searchUser = async (req, res) => {
           ],
         }
       : {};
-    const users = await user.find(keyword).find({ _id: { $ne: req.user._id } });
+    const users = await User.find(keyword).find({ _id: { $ne: req.User._id } });
     return res.status(200).send({
       success: true,
       message: "Search resuelts",

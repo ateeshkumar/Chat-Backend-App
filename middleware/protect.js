@@ -1,5 +1,5 @@
 import Jwt from "jsonwebtoken";
-import { user } from "../models/userModel.js";
+import { User } from "../models/userModel.js";
 
 export const protect = async (req, res, next) => {
   try {
@@ -7,7 +7,7 @@ export const protect = async (req, res, next) => {
       req.headers.authorization,
       process.env.SECRET_KEY
     );
-    req.user = decode;
+    req.User = decode;
     next();
   } catch (error) {
     console.log(error);
